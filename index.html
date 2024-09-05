@@ -6,34 +6,118 @@
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Cesium.js"></script>
   <link href="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 </head>
 <body>
-    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+    
+    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark"">
+        <div class="container">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="img/amgeoid.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-                Satu Sistem Referensi Kadaster <span>(S2RK)</span>
-              </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-                <a class="nav-link" href="#">Product</a>
-                <a class="nav-link" href="#">Subscription</a>
-            </div>
-            </div>
+          <a class="navbar-brand" href="#">
+            <img src="img/amgeoid.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+            Satu Sistem Referensi Kadaster <span>(S2RK)</span>
+          </a>
         </div>
-    </nav>
+        </div>
+      </nav>
 
+    <div class="container my-5">
     <img src="img/S2RK.png" class="img-fluid" alt="...">
+    </div>
+    <div class="container my-5">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Menangkap Realitas dari Sudut yang Berbeda</h5>
+              <p class="card-text">Pemodelan 3D oblique photogrammetry adalah teknik canggih yang memungkinkan pembuatan model 3D dari objek atau area dengan sudut pandang miring (oblique), bukan hanya dari sudut vertikal atau ortogonal. Metode ini sangat efektif untuk menangkap detail yang kompleks dari bangunan, infrastruktur, dan lanskap, yang seringkali sulit dilihat dari sudut pandang tradisional. <br> <br> Pemodelan 3D oblique photogrammetry menghasilkan model yang sangat detail dan akurat, memungkinkan visualisasi dari sudut yang biasanya tidak terlihat dalam pemodelan tradisional. Ini membuka peluang baru dalam berbagai bidang, mulai dari arsitektur hingga pemetaan kota dan analisis lingkungan.</p>
 
-    <img src="img/method.png" class="img-fluid" alt="...">
+            <img src="img/method.png" class="card-img-bottom" alt="...">
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Membangun Dunia Digital yang Imersif</h5>
+              <p class="card-text">Bayangkan sebuah dunia di mana batas antara realitas dan virtual berkomunikasi, di mana Anda dapat menjelajahi, berinteraksi, dan merasakan lingkungan digital seolah-olah Anda berada di sana secara langsung. Inilah esensi dari dunia digital yang imersif—sebuah pengalaman yang menggabungkan presisi teknologi 3D, photogrammetry, dan visualisasi canggih.</p>
+
+            <div id="cesiumContainer"></div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Transformasi Digital dengan Avatar 3D dalam Model Photogrammetry</h5>
+          <p class="card-text">Temukan bagaimana teknologi avatar terkini berintegrasi dengan model 3D photogrammetry untuk menghadirkan pengalaman visual yang lebih interaktif dan realistis. Ciptakan dunia digital yang hidup dengan menggabungkan avatar Anda ke dalam lingkungan yang dirender secara akurat melalui photogrammetry.
+
+        <span>Jelajahi Inovasi Kami dan Unduh Sekarang!</span></p>
+        <button type="button" class="btn btn-dark" href="data/Third Person Game.zip">Download Sekarang!</button>
+        </div>
+        <img src="img/thirdperson.jpeg" class="card-img-bottom" alt="...">
+    </div>
+    </div>
+
+    <!-- Remove the container if you want to extend the Footer to full width. -->
 
 
-    <div id="cesiumContainer"></div>
+    <!-- Footer -->
+    <footer
+            class="text-center text-lg-start text-white"
+            style="background-color: #1c2331"
+            >
+      <!-- Section: Social media -->
+      
+      <section
+               class="d-flex justify-content-between p-4"
+               style="background-color: #6351ce"
+               >
+        <!-- Left -->
+        <div class="me-5">
+          <span>Get connected with us on social networks:</span>
+        </div>
+        <!-- Left -->
+  
+        <!-- Right -->
+        <div>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-google"></i>
+          </a>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a href="" class="text-white me-4">
+            <i class="fab fa-github"></i>
+          </a>
+        </div>
+        <!-- Right -->
+      </section>
+      <!-- Section: Social media -->
+  
+      <!-- Copyright -->
+      <div
+           class="text-center p-3"
+           style="background-color: rgba(0, 0, 0, 0.2)"
+           >
+        © 2024 Copyright:
+        <a class="text-white" href="ketuttomysuhari.github.io/s2rk"
+           >ketuttomysuhari</a
+          >
+      </div>
+      <!-- Copyright -->
+    </footer>
+    <!-- Footer -->
+  
+
+  <!-- End of .container -->
 
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
