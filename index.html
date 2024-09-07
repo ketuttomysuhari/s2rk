@@ -52,10 +52,10 @@
 
   <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
     <div class="container">
-      <h5 class="navbar-brand d-flex align-items-center" href="#">
+      <h1 class="navbar-brand d-flex align-items-center" href="#">
         <img src="img/amgeoid.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top me-2">
         <span>Satu Sistem Referensi Kadaster <small>(S2RK)</small></span>
-      </h5>
+      </h1>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -124,11 +124,26 @@
           <p class="card-text">Temukan bagaimana teknologi avatar terkini berintegrasi dengan model 3D photogrammetry untuk menghadirkan pengalaman visual yang lebih interaktif dan realistis. Ciptakan dunia digital yang hidup dengan menggabungkan avatar Anda ke dalam lingkungan yang dirender secara akurat melalui photogrammetry.
 
         <span>Jelajahi Inovasi Kami dan Unduh Sekarang!</span></p>
-        <button type="button" class="btn btn-dark" href="data/Third Person Game.zip">Download Sekarang!</button>
         </div>
-        <img src="img/thirdperson.jpeg" class="card-img-bottom" alt="...">
+        <div class="card-group">
+          <div class="card">
+            <img src="img/thirdperson.jpeg" class="card-img-bottom" alt="...">
+            <div class="card-body">
+              <button type="button" class="btn btn-dark" id="download-btn">Download Sekarang!</button>
+            </div>
+          </div>
+          <div class="card">
+            <video src="data/avatar.mp4" class="object-fit-contain" autoplay loop muted></video>
+    
+          </div>
+        </div>
+        </div>
+        
     </div>
+    
     </div>
+
+    
 
     <!-- Remove the container if you want to extend the Footer to full width. -->
 
@@ -455,6 +470,24 @@
 
   // Load model and setup fireworks initially
   loadModel().then(setupFireworks);
+</script>
+<script>
+  document.getElementById('download-btn').addEventListener('click', function() {
+      // URL file yang akan diunduh
+      var fileUrl = 'data/Third Person Game.zip';
+
+      // Buat elemen <a> sementara
+      var a = document.createElement('a');
+      a.href = fileUrl;
+      a.download = fileUrl.split('/').pop(); // Nama file untuk disimpan
+
+      // Tambahkan elemen <a> ke body dan trigger klik
+      document.body.appendChild(a);
+      a.click();
+
+      // Hapus elemen <a> setelah klik
+      document.body.removeChild(a);
+  });
 </script>
  </div>
 </body>
