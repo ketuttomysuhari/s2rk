@@ -241,7 +241,53 @@
     // Add Cesium OSM Buildings, a global 3D buildings layer.
     // const buildingTileset = await Cesium.createOsmBuildingsAsync();
     // viewer.scene.primitives.add(buildingTileset);   
+    const gajayana = viewer.entities.add({
+  polygon: {
+    hierarchy: Cesium.Cartesian3.fromDegreesArray([
+      112.62406609055904,-7.973558512896389, 112.62406609055904, -7.973674590126393,
+              112.6240447795737, -7.9738645346149895, 112.62402346858994, -7.974202213487459, 112.62376773677579,
+              -7.974972542371219,
+              112.62324561765377,
+              -7.976006680235059,
+              112.62417264548083,
+              -7.976048889888219,
+              112.6246201761565,
+              -7.97636546214855,
+              112.625291472171,
+              -7.97658706258477,
+              112.62595211269189,
+              -7.975289115463937,
+              112.62537671610903,
+              -7.974571549434529,
+              112.62406609055904,
+              -7.973558512896389
+    ]),
+    height: 510,
+    material: Cesium.Color.RED.withAlpha(0.5),
+    outline: true,
+    outlineColor: Cesium.Color.BLACK,
+  },
+});
+
+
+    gajayana.name = "Stadion Gajayana";
+    gajayana.description =
+      '\
+    <img\
+      width="50%"\
+      style="float:left; margin: 0 1em 1em 0;"\
+      src="/img/gajayana.jpeg"/>\
+    <p>\
+      Stadion Gajayana adalah stadion olahraga yang tepat di Kelurahan Kauman, Kecamatan Klojen, Kota Malang, Jawa Timur. Stadion Gajayana adalah stadion tertua di Indonesia. Stadion ini mulai menjadi pusat kota pada tahun 1924 hingga 1926. Lalu pada awal tahun 1990-an Gajayana renovasi, daya tampungnya menjadi ± 17.000 . Pada tahun 2007 area samping Stadion Gajayana menjadi MOG atau Mall Olympic Garden, rampung 2008. Stadion Gajayana yang baru, daya tampung 35.000 penonton. Stadion ini markas utama klub Arema Indonesia/Arema FC. Stadion ini juga markas klub sepak bola asal Kota Malang, yakni Persema Malang, Malang United, & NZR Sumbersari.\
+    </p>\
+    <p>\
+      Source: \
+      <a style="color: WHITE"\
+        target="_blank"\
+        href="https://id.wikipedia.org/wiki/Stadion_Gajayana">Wikpedia</a>\
+    </p>'; 
   </script>
+
 
 <script>
   Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhYWQ4OWMzYS00MjA4LTQwMjMtODAzNy03OTBmNmU0YTExYzYiLCJpZCI6NzU1Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0OTc2NjgwNn0.IznlFpdNxINwCo9A6W4lxynEEVXfOx4i4MHA7CaHshI';
