@@ -286,6 +286,30 @@
         target="_blank"\
         href="https://id.wikipedia.org/wiki/Stadion_Gajayana">Wikpedia</a>\
     </p>'; 
+
+
+
+ var cctvIcon = viewer.entities.add({
+    position: Cesium.Cartesian3.fromDegrees(112.62386528786715, -7.97766841181523, 520), // Sesuaikan koordinat lokasi CCTV
+    billboard: {
+        image: '/img/cctv.jpg', // Path ke gambar ikon CCTV
+        width: 32,
+        height: 32
+    },
+    description: `
+        <video width="320" height="240" controls>
+            <source src="http://stream.cctv.malangkota.go.id/WebRTCApp/play.html?name=494044159463642643864378" type="video/WebRTCApp" >
+        </video>
+        <p>Untuk menonton video, klik tautan berikut:</p>
+        <a href="http://stream.cctv.malangkota.go.id/WebRTCApp/play.html?name=494044159463642643864378" target="_blank">
+            http://stream.cctv.malangkota.go.id/WebRTCApp/play.html?name=494044159463642643864378
+        </a>
+    `,
+    name: 'CCTV Jl. Kawi Arah Barat Depan MOG'
+});
+
+viewer.zoomTo(viewer.entities);
+
   </script>
 
 
