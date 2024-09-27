@@ -1,66 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>S2RK</title>
-  <!-- Include the CesiumJS JavaScript and CSS files -->
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Cesium.js"></script>
-  <link href="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cesium Model Loading Example</title>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.121/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-  <style>
-    .video-container {
-        width: 100%;
-        max-width: 100%; /* Atur sesuai dengan kebutuhan web Anda */
-        margin: 0 auto; /* Agar video terpusat di halaman */
-    }
-
-    .video-container video {
-        width: 100%;
-        height: auto;
-        object-fit: contain; /* Menjaga rasio aspek video */
-    }
-
-    #cesiumContainer1 {
-      width: 100%;
-      height: 100vh;
-    }
-    .control-buttons {
-      position: absolute;
-      top: 220px;
-      left: 40px;
-      z-index: 10;
-    }
-    .cesium-button {
-      display: block;
-      margin: 5px;
-      padding: 10px;
-      background-color: #1a1b1b;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .cesium-button.secondary {
-      background-color: #6c757d;
-    }
-</style>
+    <style>
+        #cesiumContainer {
+            width: 100%;
+            height: 100vh;
+        }
+        .cesium-button {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            color: #333;
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+        }
+        .cesium-button:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+        .toolbar {
+            position: absolute;
+            top: 100px;
+            left: 10px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+        }
+ 
+    </style>
 </head>
 <body>
-    
 
-  <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
-    <div class="container">
-      <h1 class="navbar-brand d-flex align-items-center" href="#">
-        <img src="img/amgeoid.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top me-2">
-        <span>Satu Sistem Referensi Kadaster <small>(S2RK)</small></span>
-      </h1>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"><img src="img/amgeoid.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top me-2">
+        <span>Satu Sistem Referensi Kadaster <small>(S2RK)</small></span></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
+        <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="index.html">Home</a>
           </li>
@@ -68,34 +56,28 @@
             <a class="nav-link" href="ITN2.html">ITN2Malang</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="3dwebgis.html">3D WebGIS</a>
+            <a class="nav-link" href="3dwebgis.html">3D WEBGIS</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-
-
-    <div class="container my-5">
-        <div class="card">
-            <div class="card-body">
-              <h2 class="card-title">Data LIDAR Kampus 2 ITN Malang</h2>
-              <p class="card-text">Selamat datang di halaman data LIDAR Kampus 2 ITN Malang! Di sini, Anda dapat mengakses hasil pelatihan teknologi pemetaan LIDAR yang diselenggarakan oleh Terra Drone dan Ikatan Surveyor Indonesia. Data ini mencakup pemetaan 3D, informasi tinggi permukaan, dan akurasi pengukuran, yang dapat dimanfaatkan untuk perencanaan tata ruang, pengembangan infrastruktur, serta penelitian. Untuk pertanyaan lebih lanjut, silakan hubungi kami di ksuhari@lecturer.itn.ac.id atau +6281236828055. Terima kasih telah berkunjung!
-
-
-
-              </p>
-
-            <div id="cesiumContainer"></div>
-        </div>
+  
+    <div id="cesiumContainer"></div>
+    <div class="toolbar">
+        <button id="loadModel1" class="cesium-button">Load Model Oblique Photogrammetry</button>
+        <button id="loadModel2" class="cesium-button">Load Model LiDAR</button>
     </div>
 
-    </div>
-
+      <div
+      class="text-center p-3"
+      style="background-color: rgb(255, 255, 255)"
+      >
     
+    </div>
+    <img src="img/tutorial.png" class="img-fluid" width="100%" alt="...">
 
-    <!-- Remove the container if you want to extend the Footer to full width. -->
 
 
     <!-- Footer -->
@@ -153,63 +135,53 @@
       <!-- Copyright -->
     </footer>
     <!-- Footer -->
-  
 
-  <!-- End of .container -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    
+    <script>
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhYWQ4OWMzYS00MjA4LTQwMjMtODAzNy03OTBmNmU0YTExYzYiLCJpZCI6NzU1Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0OTc2NjgwNn0.IznlFpdNxINwCo9A6W4lxynEEVXfOx4i4MHA7CaHshI';
 
+        const viewer = new Cesium.Viewer('cesiumContainer', {
+            terrain: Cesium.Terrain.fromWorldTerrain(),
+            shouldAnimate: true,
+            timeline: false,
+            animation: false,
+        });
 
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-  <script type="module">
-    // Your access token can be found at: https://ion.cesium.com/tokens.
-    // This is the default access token from your ion account
+        let tileset = null;
 
-    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhYWQ4OWMzYS00MjA4LTQwMjMtODAzNy03OTBmNmU0YTExYzYiLCJpZCI6NzU1Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0OTc2NjgwNn0.IznlFpdNxINwCo9A6W4lxynEEVXfOx4i4MHA7CaHshI';
+        async function loadModel(assetId) {
+            if (tileset) {
+                viewer.scene.primitives.remove(tileset);
+                tileset = null;  // Clear the reference
+            }
+            try {
+                tileset = await Cesium.Cesium3DTileset.fromIonAssetId(assetId);
+                viewer.scene.primitives.add(tileset);
+                viewer.zoomTo(tileset);
 
-    // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
-    const viewer = new Cesium.Viewer('cesiumContainer', {
-      terrain: Cesium.Terrain.fromWorldTerrain(),
-      timeline: false,
-      animation: false,
-    });    
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(112.63402360393479,-7.919075322302064, 600),
+                    orientation: {
+                        heading: Cesium.Math.toRadians(0.0),
+                        pitch: Cesium.Math.toRadians(-15.0),
+                    }
+                });
 
-    try {
-        const tileset = await Cesium.Cesium3DTileset.fromIonAssetId(2747379);
-        viewer.scene.primitives.add(tileset);
-        viewer.zoomTo(tileset);
-    } catch (error) {
-        console.log(`Error loading tileset: ${error}`);
-    } 
+                console.log(`Model ${assetId} loaded successfully.`);
+            } catch (error) {
+                console.error(`Error loading tileset (ID: ${assetId}): ${error}`);
+            }
+        }
 
+        document.getElementById('loadModel1').addEventListener('click', function() {
+            loadModel(2748972);
+        });
 
-    // Fly the camera to ITN Malang at the given longitude, latitude, and height.
-    viewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(112.63396616202033, -7.91906717054961, 600),
-      orientation: {
-        heading: Cesium.Math.toRadians(0.0),
-        pitch: Cesium.Math.toRadians(-15.0),
-      }
-    });
-
-
-    viewer.zoomTo(viewer.entities);
-
-
-        var isiIcon = viewer.entities.add({
-        position: Cesium.Cartesian3.fromDegrees(112.6342838353682, -7.9165258857947265, 530), // Sesuaikan koordinat lokasi CCTV
-        billboard: {
-            image: 'img/workshop.jpg', // Path ke gambar ikon CCTV
-            width: 32,
-            height: 32
-        },
-        description: `
-            <div class="sketchfab-embed-wrapper"> <iframe title="DJI MATRICE 350 RTK - SHARE 203S PRO" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/f54cdb3fa88a48bbbda901af354333e2/embed"> </iframe> </div>
-        `,
-        name: 'Model 3D Drone'
-    });
-
-  </script>
-
- </div>
+        document.getElementById('loadModel2').addEventListener('click', function() {
+            loadModel(2747379);
+        });
+    </script>
 </body>
 </html>
