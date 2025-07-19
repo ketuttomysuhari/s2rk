@@ -183,51 +183,7 @@
             loadModel(2747379);
         });
 
-        // Tambahkan GeoJSON sebagai entitas
-        Cesium.GeoJsonDataSource.load('data/ITN.geojson', {
-            stroke: Cesium.Color.YELLOW.withAlpha(0.5),
-            fill: Cesium.Color.CYAN.withAlpha(0.3),
-            clampToGround: true
-        }).then(function(dataSource) {
-            viewer.dataSources.add(dataSource);
-            viewer.zoomTo(dataSource);
         
-            const entities = dataSource.entities.values;
-        
-            for (let i = 0; i < entities.length; i++) {
-                const entity = entities[i];
-        
-                // Set default styling
-                entity.polygon.material = Cesium.Color.CYAN.withAlpha(0.3);
-                entity.polygon.outline = true;
-                entity.polygon.outlineColor = Cesium.Color.YELLOW;
-        
-                // Tambahkan properti interaksi
-                entity.description = new Cesium.CallbackProperty(() => {
-                    const name = entity.name || "Unnamed";
-                    const area = getPolygonArea(entity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions);
-                    const centroid = getCentroid(entity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions);
-                    return `
-                        <strong>Nama:</strong> ${name}<br>
-                        <strong>Luas:</strong> ${area.toFixed(2)} m²<br>
-                        <strong>Posisi:</strong> Lat: ${centroid.lat.toFixed(6)}, Lon: ${centroid.lon.toFixed(6)}
-                    `;
-                }, false);
-            }
-        
-            // Highlight on click
-            const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-            handler.setInputAction(function (movement) {
-                const pickedObject = viewer.scene.pick(movement.position);
-                if (Cesium.defined(pickedObject) && pickedObject.id && pickedObject.id.polygon) {
-                    entities.forEach(e => {
-                        e.polygon.material = Cesium.Color.CYAN.withAlpha(0.04);
-                    });
-                    pickedObject.id.polygon.material = Cesium.Color.BLUE.withAlpha(0.6);
-                }
-            }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-        });
-
         function getPolygonArea(positions) {
             const cartographics = positions.map(p => Cesium.Cartographic.fromCartesian(p));
             const radiansToDegrees = Cesium.Math.toDegrees;
@@ -258,6 +214,51 @@
                 lon: Cesium.Math.toDegrees(cartographic.longitude)
             };
         }
+
+        // Tambahkan GeoJSON sebagai entitas
+        Cesium.GeoJsonDataSource.load('data/ITN.geojson', {
+            stroke: Cesium.Color.YELLOW.withAlpha(0.5),
+            fill: Cesium.Color.CYAN.withAlpha(0.3),
+            clampToGround: true
+        }).then(function(dataSource) {
+            viewer.dataSources.add(dataSource);
+            viewer.zoomTo(dataSource);
+        
+            const entities = dataSource.entities.values;
+        
+            for (let i = 0; i < entities.length; i++) {
+                const entity = entities[i];
+        
+                // Set default styling
+                entity.polygon.material = Cesium.Color.WHITE.withAlpha(0.04);
+                entity.polygon.outline = true;
+                entity.polygon.outlineColor = Cesium.Color.YELLOW;
+        
+                // Tambahkan properti interaksi
+                entity.description = new Cesium.CallbackProperty(() => {
+                    const name = entity.name || "Unnamed";
+                    const area = getPolygonArea(entity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions);
+                    const centroid = getCentroid(entity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions);
+                    return `
+                        <strong>Nama:</strong> ${name}<br>
+                        <strong>Luas:</strong> ${area.toFixed(2)} m²<br>
+                        <strong>Posisi:</strong> Lat: ${centroid.lat.toFixed(6)}, Lon: ${centroid.lon.toFixed(6)}
+                    `;
+                }, false);
+            }
+        
+            // Highlight on click
+            const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+            handler.setInputAction(function (movement) {
+                const pickedObject = viewer.scene.pick(movement.position);
+                if (Cesium.defined(pickedObject) && pickedObject.id && pickedObject.id.polygon) {
+                    entities.forEach(e => {
+                        e.polygon.material = Cesium.Color.WHITE.withAlpha(0.04);
+                    });
+                    pickedObject.id.polygon.material = Cesium.Color.BLUE.withAlpha(0.6);
+                }
+            }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        });
 
     </script>
 </body>
