@@ -218,7 +218,7 @@
         // Tambahkan GeoJSON sebagai entitas
         Cesium.GeoJsonDataSource.load('data/ITN.geojson', {
             stroke: Cesium.Color.YELLOW.withAlpha(0.5),
-            fill: Cesium.Color.CYAN.withAlpha(0.3),
+            fill: Cesium.Color.WHITE.withAlpha(0.04),
             clampToGround: true
         }).then(function(dataSource) {
             viewer.dataSources.add(dataSource);
