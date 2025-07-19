@@ -236,19 +236,20 @@
               const positions = hierarchy.positions;
               const area = getPolygonArea(positions);
               const centroid = getCentroid(positions);
-    
+            
               const props = entity.properties || {};
               let content = "<strong><u>INFORMASI GEOJSON</u></strong><br>";
               for (const key in props) {
                 if (props.hasOwnProperty(key)) {
-                  content += `<strong>${key}:</strong> ${props[key].getValue(Cesium.JulianDate.now())}<br>`;
+                  content += `<strong>${key}:</strong> ${props[key]}<br>`;
                 }
               }
-    
+            
               content += `<strong>Luas:</strong> ${area.toFixed(2)} m²<br>`;
               content += `<strong>Posisi:</strong> Lat: ${centroid.lat.toFixed(6)}, Lon: ${centroid.lon.toFixed(6)}<br>`;
               return content;
             }, false);
+
           }
         }
     
