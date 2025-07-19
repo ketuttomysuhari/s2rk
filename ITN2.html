@@ -221,12 +221,43 @@
                 const pickedObject = viewer.scene.pick(movement.position);
                 if (Cesium.defined(pickedObject) && pickedObject.id && pickedObject.id.polygon) {
                     entities.forEach(e => {
-                        e.polygon.material = Cesium.Color.CYAN.withAlpha(0.3);
+                        e.polygon.material = Cesium.Color.CYAN.withAlpha(0.04);
                     });
                     pickedObject.id.polygon.material = Cesium.Color.BLUE.withAlpha(0.6);
                 }
             }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
         });
+
+        function getPolygonArea(positions) {
+            const cartographics = positions.map(p => Cesium.Cartographic.fromCartesian(p));
+            const radiansToDegrees = Cesium.Math.toDegrees;
+        
+            let area = 0;
+            for (let i = 0; i < cartographics.length - 1; i++) {
+                const xi = radiansToDegrees(cartographics[i].longitude);
+                const yi = radiansToDegrees(cartographics[i].latitude);
+                const xi1 = radiansToDegrees(cartographics[i + 1].longitude);
+                const yi1 = radiansToDegrees(cartographics[i + 1].latitude);
+                area += (xi * yi1 - xi1 * yi);
+            }
+            return Math.abs(area / 2 * 111139 * 111139); // approx. to square meters
+        }
+        
+        function getCentroid(positions) {
+            let x = 0, y = 0, z = 0;
+            for (const pos of positions) {
+                x += pos.x;
+                y += pos.y;
+                z += pos.z;
+            }
+            const len = positions.length;
+            const centroid = new Cesium.Cartesian3(x / len, y / len, z / len);
+            const cartographic = Cesium.Cartographic.fromCartesian(centroid);
+            return {
+                lat: Cesium.Math.toDegrees(cartographic.latitude),
+                lon: Cesium.Math.toDegrees(cartographic.longitude)
+            };
+        }
 
     </script>
 </body>
