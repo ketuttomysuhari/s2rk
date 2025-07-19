@@ -140,131 +140,140 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     
     <script>
-        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhYWQ4OWMzYS00MjA4LTQwMjMtODAzNy03OTBmNmU0YTExYzYiLCJpZCI6NzU1Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0OTc2NjgwNn0.IznlFpdNxINwCo9A6W4lxynEEVXfOx4i4MHA7CaHshI';
-
-        const viewer = new Cesium.Viewer('cesiumContainer', {
-            terrain: Cesium.Terrain.fromWorldTerrain(),
-            shouldAnimate: true,
-            timeline: false,
-            animation: false,
-        });
-
-        let tileset = null;
-
-        async function loadModel(assetId) {
-            if (tileset) {
-                viewer.scene.primitives.remove(tileset);
-                tileset = null;  // Clear the reference
-            }
-            try {
-                tileset = await Cesium.Cesium3DTileset.fromIonAssetId(assetId);
-                viewer.scene.primitives.add(tileset);
-                viewer.zoomTo(tileset);
-
-                viewer.camera.flyTo({
-                    destination: Cesium.Cartesian3.fromDegrees(112.63402360393479,-7.919075322302064, 600),
-                    orientation: {
-                        heading: Cesium.Math.toRadians(0.0),
-                        pitch: Cesium.Math.toRadians(-15.0),
-                    }
-                });
-
-                console.log(`Model ${assetId} loaded successfully.`);
-            } catch (error) {
-                console.error(`Error loading tileset (ID: ${assetId}): ${error}`);
-            }
-        }
-
-        document.getElementById('loadModel1').addEventListener('click', function() {
-            loadModel(2748972);
-        });
-
-        document.getElementById('loadModel2').addEventListener('click', function() {
-            loadModel(2747379);
-        });
-
-        
-      // ======================== GeoJSON Tools ========================
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJhYWQ4OWMzYS00MjA4LTQwMjMtODAzNy03OTBmNmU0YTExYzYiLCJpZCI6NzU1Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTU0OTc2NjgwNn0.IznlFpdNxINwCo9A6W4lxynEEVXfOx4i4MHA7CaHshI';
     
-      function getPolygonArea(positions) {
-        const cartographics = positions.map(p => Cesium.Cartographic.fromCartesian(p));
-        const radiansToDegrees = Cesium.Math.toDegrees;
-        let area = 0;
-        for (let i = 0; i < cartographics.length - 1; i++) {
-          const xi = radiansToDegrees(cartographics[i].longitude);
-          const yi = radiansToDegrees(cartographics[i].latitude);
-          const xi1 = radiansToDegrees(cartographics[i + 1].longitude);
-          const yi1 = radiansToDegrees(cartographics[i + 1].latitude);
-          area += (xi * yi1 - xi1 * yi);
-        }
-        return Math.abs(area / 2 * 111139 * 111139); // m² approx.
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      terrain: Cesium.Terrain.fromWorldTerrain(),
+      shouldAnimate: true,
+      timeline: false,
+      animation: false,
+    });
+    
+    let tileset = null;
+    
+    async function loadModel(assetId) {
+      if (tileset) {
+        viewer.scene.primitives.remove(tileset);
+        tileset = null;
       }
+      try {
+        tileset = await Cesium.Cesium3DTileset.fromIonAssetId(assetId);
+        viewer.scene.primitives.add(tileset);
+        viewer.zoomTo(tileset);
     
-      function getCentroid(positions) {
-        let x = 0, y = 0, z = 0;
-        for (const pos of positions) {
-          x += pos.x; y += pos.y; z += pos.z;
-        }
-        const len = positions.length;
-        const centroid = new Cesium.Cartesian3(x / len, y / len, z / len);
-        const cartographic = Cesium.Cartographic.fromCartesian(centroid);
-        return {
-          lat: Cesium.Math.toDegrees(cartographic.latitude),
-          lon: Cesium.Math.toDegrees(cartographic.longitude)
-        };
+        viewer.camera.flyTo({
+          destination: Cesium.Cartesian3.fromDegrees(112.63402360393479, -7.919075322302064, 600),
+          orientation: {
+            heading: Cesium.Math.toRadians(0.0),
+            pitch: Cesium.Math.toRadians(-15.0),
+          },
+        });
+      } catch (error) {
+        console.error(`Error loading tileset (ID: ${assetId}): ${error}`);
       }
+    }
     
-      Cesium.GeoJsonDataSource.load('data/ITN.geojson', {
-        stroke: Cesium.Color.WHITE.withAlpha(0.05),
-        fill: Cesium.Color.WHITE.withAlpha(0.04),
-        clampToGround: true
-      }).then(function (dataSource) {
-        viewer.dataSources.add(dataSource);
-        viewer.zoomTo(dataSource);
-        const entities = dataSource.entities.values;
+    document.getElementById('loadModel1').addEventListener('click', () => loadModel(2748972));
+    document.getElementById('loadModel2').addEventListener('click', () => loadModel(2747379));
     
-        for (let i = 0; i < entities.length; i++) {
-          const entity = entities[i];
+    // ======================== GeoJSON Tools ========================
+    function getPolygonArea(positions) {
+      const cartographics = positions.map(p => Cesium.Cartographic.fromCartesian(p));
+      const radiansToDegrees = Cesium.Math.toDegrees;
+      let area = 0;
+      for (let i = 0; i < cartographics.length - 1; i++) {
+        const xi = radiansToDegrees(cartographics[i].longitude);
+        const yi = radiansToDegrees(cartographics[i].latitude);
+        const xi1 = radiansToDegrees(cartographics[i + 1].longitude);
+        const yi1 = radiansToDegrees(cartographics[i + 1].latitude);
+        area += (xi * yi1 - xi1 * yi);
+      }
+      return Math.abs(area / 2 * 111139 * 111139);
+    }
     
-          if (Cesium.defined(entity.polygon)) {
-            entity.polygon.material = Cesium.Color.WHITE.withAlpha(0.03);
-            entity.polygon.outline = true;
-            entity.polygon.outlineColor = Cesium.Color.WHITE;
+    function getCentroid(positions) {
+      let x = 0, y = 0, z = 0;
+      for (const pos of positions) {
+        x += pos.x;
+        y += pos.y;
+        z += pos.z;
+      }
+      const len = positions.length;
+      const centroid = new Cesium.Cartesian3(x / len, y / len, z / len);
+      const cartographic = Cesium.Cartographic.fromCartesian(centroid);
+      return {
+        lat: Cesium.Math.toDegrees(cartographic.latitude),
+        lon: Cesium.Math.toDegrees(cartographic.longitude),
+      };
+    }
     
-            entity.description = new Cesium.CallbackProperty(() => {
-              const hierarchy = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now());
-              const positions = hierarchy.positions;
-              const area = getPolygonArea(positions);
-              const centroid = getCentroid(positions);
-            
-              const props = entity.properties || {};
-              let content = "<strong><u>INFORMASI GEOJSON</u></strong><br>";
-              for (const key in props) {
-                if (props.hasOwnProperty(key)) {
-                  content += `<strong>${key}:</strong> ${props[key]}<br>`;
-                }
+    Cesium.GeoJsonDataSource.load('data/ITN.geojson', {
+      stroke: Cesium.Color.WHITE.withAlpha(0.05),
+      fill: Cesium.Color.WHITE.withAlpha(0.04),
+      clampToGround: true,
+    }).then(function (dataSource) {
+      viewer.dataSources.add(dataSource);
+      viewer.zoomTo(dataSource);
+      const entities = dataSource.entities.values;
+    
+      for (let i = 0; i < entities.length; i++) {
+        const entity = entities[i];
+    
+        if (Cesium.defined(entity.polygon)) {
+          const props = entity.properties || {};
+    
+          // Default visual style
+          entity.polygon.material = Cesium.Color.WHITE.withAlpha(0.03);
+          entity.polygon.outline = true;
+          entity.polygon.outlineColor = Cesium.Color.WHITE;
+    
+          // Optional extrude based on "tinggi" property
+          if (props.hasOwnProperty("tinggi")) {
+            const heightVal = parseFloat(props["tinggi"]);
+            if (!isNaN(heightVal)) {
+              entity.polygon.extrudedHeight = heightVal;
+            }
+          }
+    
+          // Clean description
+          entity.description = new Cesium.CallbackProperty(() => {
+            const hierarchy = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now());
+            const positions = hierarchy.positions;
+            const area = getPolygonArea(positions);
+            const centroid = getCentroid(positions);
+    
+            let content = "<strong><u>INFORMASI GEDUNG</u></strong><br>";
+            for (const key in props) {
+              if (
+                props.hasOwnProperty(key) &&
+                !key.startsWith("_") &&
+                typeof props[key] !== "function" &&
+                typeof props[key] !== "object"
+              ) {
+                content += `<strong>${key}:</strong> ${props[key]}<br>`;
               }
-            
-              content += `<strong>Luas:</strong> ${area.toFixed(2)} m²<br>`;
-              content += `<strong>Posisi:</strong> Lat: ${centroid.lat.toFixed(6)}, Lon: ${centroid.lon.toFixed(6)}<br>`;
-              return content;
-            }, false);
-
-          }
-        }
+            }
     
-        const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-        handler.setInputAction((movement) => {
-          const picked = viewer.scene.pick(movement.position);
-          if (Cesium.defined(picked) && picked.id && picked.id.polygon) {
-            entities.forEach(e => {
-              if (e.polygon) e.polygon.material = Cesium.Color.WHITE.withAlpha(0.03);
-            });
-            picked.id.polygon.material = Cesium.Color.BLUE.withAlpha(0.6);
-          }
-        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-      });
-
+            content += `<strong>Luas:</strong> ${area.toFixed(2)} m²<br>`;
+            content += `<strong>Posisi:</strong> Lat: ${centroid.lat.toFixed(6)}, Lon: ${centroid.lon.toFixed(6)}<br>`;
+            return content;
+          }, false);
+        }
+      }
+    
+      // Interaktif highlight saat diklik
+      const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+      handler.setInputAction((movement) => {
+        const picked = viewer.scene.pick(movement.position);
+        if (Cesium.defined(picked) && picked.id && picked.id.polygon) {
+          entities.forEach(e => {
+            if (e.polygon) e.polygon.material = Cesium.Color.WHITE.withAlpha(0.03);
+          });
+          picked.id.polygon.material = Cesium.Color.BLUE.withAlpha(0.6);
+        }
+      }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    });
     </script>
+
 </body>
 </html>
