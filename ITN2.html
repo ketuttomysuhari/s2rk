@@ -235,29 +235,35 @@
             }
           }
     
-          // Clean description
-          entity.description = new Cesium.CallbackProperty(() => {
-            const hierarchy = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now());
-            const positions = hierarchy.positions;
-            const area = getPolygonArea(positions);
-            const centroid = getCentroid(positions);
-    
-            let content = "<strong><u>INFORMASI GEDUNG</u></strong><br>";
-            for (const key in props) {
-              if (
-                props.hasOwnProperty(key) &&
-                !key.startsWith("_") &&
-                typeof props[key] !== "function" &&
-                typeof props[key] !== "object"
-              ) {
-                content += `<strong>${key}:</strong> ${props[key]}<br>`;
+            entity.description = new Cesium.CallbackProperty(() => {
+              const hierarchy = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now());
+              const positions = hierarchy.positions;
+              const area = getPolygonArea(positions);
+              const centroid = getCentroid(positions);
+            
+              let content = "<strong><u>INFORMASI GEDUNG</u></strong><br>";
+              const props = entity.properties || {};
+            
+              for (const key in props) {
+                if (
+                  props.hasOwnProperty(key) &&
+                  !key.startsWith("_")
+                ) {
+                  let val = props[key];
+                  if (val && typeof val.getValue === 'function') {
+                    val = val.getValue(Cesium.JulianDate.now());
+                  }
+                  if (typeof val !== 'function' && typeof val !== 'object') {
+                    content += `<strong>${key}:</strong> ${val}<br>`;
+                  }
+                }
               }
-            }
-    
-            content += `<strong>Luas:</strong> ${area.toFixed(2)} m²<br>`;
-            content += `<strong>Posisi:</strong> Lat: ${centroid.lat.toFixed(6)}, Lon: ${centroid.lon.toFixed(6)}<br>`;
-            return content;
-          }, false);
+            
+              content += `<strong>Luas:</strong> ${area.toFixed(2)} m²<br>`;
+              content += `<strong>Posisi:</strong> Lat: ${centroid.lat.toFixed(6)}, Lon: ${centroid.lon.toFixed(6)}<br>`;
+              return content;
+            }, false);
+
         }
       }
     
