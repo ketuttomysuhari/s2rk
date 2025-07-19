@@ -184,81 +184,85 @@
         });
 
         
-        function getPolygonArea(positions) {
-            const cartographics = positions.map(p => Cesium.Cartographic.fromCartesian(p));
-            const radiansToDegrees = Cesium.Math.toDegrees;
-        
-            let area = 0;
-            for (let i = 0; i < cartographics.length - 1; i++) {
-                const xi = radiansToDegrees(cartographics[i].longitude);
-                const yi = radiansToDegrees(cartographics[i].latitude);
-                const xi1 = radiansToDegrees(cartographics[i + 1].longitude);
-                const yi1 = radiansToDegrees(cartographics[i + 1].latitude);
-                area += (xi * yi1 - xi1 * yi);
-            }
-            return Math.abs(area / 2 * 111139 * 111139); // approx. to square meters
+      // ======================== GeoJSON Tools ========================
+    
+      function getPolygonArea(positions) {
+        const cartographics = positions.map(p => Cesium.Cartographic.fromCartesian(p));
+        const radiansToDegrees = Cesium.Math.toDegrees;
+        let area = 0;
+        for (let i = 0; i < cartographics.length - 1; i++) {
+          const xi = radiansToDegrees(cartographics[i].longitude);
+          const yi = radiansToDegrees(cartographics[i].latitude);
+          const xi1 = radiansToDegrees(cartographics[i + 1].longitude);
+          const yi1 = radiansToDegrees(cartographics[i + 1].latitude);
+          area += (xi * yi1 - xi1 * yi);
         }
-        
-        function getCentroid(positions) {
-            let x = 0, y = 0, z = 0;
-            for (const pos of positions) {
-                x += pos.x;
-                y += pos.y;
-                z += pos.z;
-            }
-            const len = positions.length;
-            const centroid = new Cesium.Cartesian3(x / len, y / len, z / len);
-            const cartographic = Cesium.Cartographic.fromCartesian(centroid);
-            return {
-                lat: Cesium.Math.toDegrees(cartographic.latitude),
-                lon: Cesium.Math.toDegrees(cartographic.longitude)
-            };
+        return Math.abs(area / 2 * 111139 * 111139); // m² approx.
+      }
+    
+      function getCentroid(positions) {
+        let x = 0, y = 0, z = 0;
+        for (const pos of positions) {
+          x += pos.x; y += pos.y; z += pos.z;
         }
-
-        // Tambahkan GeoJSON sebagai entitas
-        Cesium.GeoJsonDataSource.load('data/ITN.geojson', {
-            stroke: Cesium.Color.YELLOW.withAlpha(0.5),
-            fill: Cesium.Color.WHITE.withAlpha(0.04),
-            clampToGround: true
-        }).then(function(dataSource) {
-            viewer.dataSources.add(dataSource);
-            viewer.zoomTo(dataSource);
-        
-            const entities = dataSource.entities.values;
-        
-            for (let i = 0; i < entities.length; i++) {
-                const entity = entities[i];
-        
-                // Set default styling
-                entity.polygon.material = Cesium.Color.WHITE.withAlpha(0.04);
-                entity.polygon.outline = true;
-                entity.polygon.outlineColor = Cesium.Color.YELLOW;
-        
-                // Tambahkan properti interaksi
-                entity.description = new Cesium.CallbackProperty(() => {
-                    const name = entity.name || "Unnamed";
-                    const area = getPolygonArea(entity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions);
-                    const centroid = getCentroid(entity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions);
-                    return `
-                        <strong>Nama:</strong> ${name}<br>
-                        <strong>Luas:</strong> ${area.toFixed(2)} m²<br>
-                        <strong>Posisi:</strong> Lat: ${centroid.lat.toFixed(6)}, Lon: ${centroid.lon.toFixed(6)}
-                    `;
-                }, false);
-            }
-        
-            // Highlight on click
-            const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-            handler.setInputAction(function (movement) {
-                const pickedObject = viewer.scene.pick(movement.position);
-                if (Cesium.defined(pickedObject) && pickedObject.id && pickedObject.id.polygon) {
-                    entities.forEach(e => {
-                        e.polygon.material = Cesium.Color.WHITE.withAlpha(0.04);
-                    });
-                    pickedObject.id.polygon.material = Cesium.Color.BLUE.withAlpha(0.6);
+        const len = positions.length;
+        const centroid = new Cesium.Cartesian3(x / len, y / len, z / len);
+        const cartographic = Cesium.Cartographic.fromCartesian(centroid);
+        return {
+          lat: Cesium.Math.toDegrees(cartographic.latitude),
+          lon: Cesium.Math.toDegrees(cartographic.longitude)
+        };
+      }
+    
+      Cesium.GeoJsonDataSource.load('data/ITN.geojson', {
+        stroke: Cesium.Color.YELLOW.withAlpha(0.5),
+        fill: Cesium.Color.CYAN.withAlpha(0.3),
+        clampToGround: true
+      }).then(function (dataSource) {
+        viewer.dataSources.add(dataSource);
+        viewer.zoomTo(dataSource);
+        const entities = dataSource.entities.values;
+    
+        for (let i = 0; i < entities.length; i++) {
+          const entity = entities[i];
+    
+          if (Cesium.defined(entity.polygon)) {
+            entity.polygon.material = Cesium.Color.CYAN.withAlpha(0.3);
+            entity.polygon.outline = true;
+            entity.polygon.outlineColor = Cesium.Color.YELLOW;
+    
+            entity.description = new Cesium.CallbackProperty(() => {
+              const hierarchy = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now());
+              const positions = hierarchy.positions;
+              const area = getPolygonArea(positions);
+              const centroid = getCentroid(positions);
+    
+              const props = entity.properties || {};
+              let content = "<strong><u>INFORMASI GEOJSON</u></strong><br>";
+              for (const key in props) {
+                if (props.hasOwnProperty(key)) {
+                  content += `<strong>${key}:</strong> ${props[key].getValue(Cesium.JulianDate.now())}<br>`;
                 }
-            }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-        });
+              }
+    
+              content += `<strong>Luas:</strong> ${area.toFixed(2)} m²<br>`;
+              content += `<strong>Posisi:</strong> Lat: ${centroid.lat.toFixed(6)}, Lon: ${centroid.lon.toFixed(6)}<br>`;
+              return content;
+            }, false);
+          }
+        }
+    
+        const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        handler.setInputAction((movement) => {
+          const picked = viewer.scene.pick(movement.position);
+          if (Cesium.defined(picked) && picked.id && picked.id.polygon) {
+            entities.forEach(e => {
+              if (e.polygon) e.polygon.material = Cesium.Color.CYAN.withAlpha(0.3);
+            });
+            picked.id.polygon.material = Cesium.Color.BLUE.withAlpha(0.6);
+          }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+      });
 
     </script>
 </body>
