@@ -215,8 +215,8 @@
       }
     
       Cesium.GeoJsonDataSource.load('data/ITN.geojson', {
-        stroke: Cesium.Color.YELLOW.withAlpha(0.5),
-        fill: Cesium.Color.CYAN.withAlpha(0.3),
+        stroke: Cesium.Color.WHITE.withAlpha(0.05),
+        fill: Cesium.Color.WHITE.withAlpha(0.04),
         clampToGround: true
       }).then(function (dataSource) {
         viewer.dataSources.add(dataSource);
@@ -227,9 +227,9 @@
           const entity = entities[i];
     
           if (Cesium.defined(entity.polygon)) {
-            entity.polygon.material = Cesium.Color.CYAN.withAlpha(0.3);
+            entity.polygon.material = Cesium.Color.WHITE.withAlpha(0.03);
             entity.polygon.outline = true;
-            entity.polygon.outlineColor = Cesium.Color.YELLOW;
+            entity.polygon.outlineColor = Cesium.Color.WHITE;
     
             entity.description = new Cesium.CallbackProperty(() => {
               const hierarchy = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now());
@@ -258,7 +258,7 @@
           const picked = viewer.scene.pick(movement.position);
           if (Cesium.defined(picked) && picked.id && picked.id.polygon) {
             entities.forEach(e => {
-              if (e.polygon) e.polygon.material = Cesium.Color.CYAN.withAlpha(0.3);
+              if (e.polygon) e.polygon.material = Cesium.Color.WHITE.withAlpha(0.03);
             });
             picked.id.polygon.material = Cesium.Color.BLUE.withAlpha(0.6);
           }
